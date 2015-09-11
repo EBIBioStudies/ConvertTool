@@ -10,6 +10,7 @@ import uk.ac.ebi.biostd.in.PMDoc;
 import uk.ac.ebi.biostd.in.pagetab.ReferenceOccurrence;
 import uk.ac.ebi.biostd.in.pagetab.SectionOccurrence;
 import uk.ac.ebi.biostd.in.pagetab.SubmissionInfo;
+import uk.ac.ebi.biostd.model.SubmissionAttributeException;
 import uk.ac.ebi.biostd.out.DocumentFormatter;
 import uk.ac.ebi.biostd.out.cell.CellFormatter;
 import uk.ac.ebi.biostd.out.cell.XLSXCellStream;
@@ -210,67 +211,72 @@ public class Main
   
   int gen=1;
   
-  for( SubmissionInfo ps : doc.getSubmissions() )
+  if( doc.getSubmissions() != null )
   {
-   if( config.getGenAcc() )
-   {
-    if(ps.getAccNoPrefix() != null || ps.getAccNoSuffix() != null)
-     ps.getSubmission().setAccNo(
-       (ps.getAccNoPrefix() != null ? ps.getAccNoPrefix() : "") + (gen++) + (ps.getAccNoSuffix() != null ? ps.getAccNoSuffix() : ""));
-    else if(ps.getSubmission().getAccNo() == null)
-     ps.getSubmission().setAccNo("SBM" + (gen++));
-   }
-   else
-    ps.getSubmission().setAccNo( ps.getAccNoOriginal() );
    
-   if( ps.getGlobalSections() == null )
-    continue;
-   
-   for( SectionOccurrence sr :  ps.getGlobalSections() )
+   for(SubmissionInfo ps : doc.getSubmissions())
    {
-    if( config.getGenAcc() )
+    try
     {
-     if( sr.getPrefix() != null  || sr.getSuffix() != null )
-      sr.getSection().setAccNo( (sr.getPrefix() != null?sr.getPrefix():"")+(gen++)+(sr.getSuffix() != null?sr.getSuffix():"") );
+     ps.getSubmission().normalizeAttributes();
     }
-    else
-     sr.getSection().setAccNo( sr.getOriginalAccNo().substring(1) );
-   }
-   
-   if( ps.getReferenceOccurrences() == null )
-    continue;
-   
-   if( config.getGenAcc() )
-   {
-    for( ReferenceOccurrence ro : ps.getReferenceOccurrences() )
-     ro.getRef().setValue( ro.getSection().getAccNo() );
-   }
-
-/*   
-   boolean hasTitle = false;
-   for( SectionAttribute satt : ps.getRootSectionOccurance().getSection().getAttributes() )
-   {
-    if(satt.getName().equals("Title"))
+    catch(SubmissionAttributeException e)
     {
-     hasTitle = true;
-     break;
-    }
-   }
-   
-   if( ! hasTitle )
-   {
-    for( SubmissionAttribute sbAtt : ps.getSubmission().getAttributes() )
-    {
-     if(sbAtt.getName().equals("Title"))
-     {
-      ps.getRootSectionOccurance().getSection().getAttributes().add(0, new SectionAttribute("Title", sbAtt.getValue()));
-      break;
-     }
+     ps.getLogNode().log(Level.ERROR, e.getMessage());
     }
     
+    
+    if(config.getGenAcc())
+    {
+     if(ps.getAccNoPrefix() != null || ps.getAccNoSuffix() != null)
+      ps.getSubmission().setAccNo(
+        (ps.getAccNoPrefix() != null ? ps.getAccNoPrefix() : "") + (gen++) + (ps.getAccNoSuffix() != null ? ps.getAccNoSuffix() : ""));
+     else if(ps.getSubmission().getAccNo() == null)
+      ps.getSubmission().setAccNo("SBM" + (gen++));
+    }
+    else
+     ps.getSubmission().setAccNo(ps.getAccNoOriginal());
+
+    if(ps.getGlobalSections() == null)
+     continue;
+
+    if( ps.getGlobalSections() != null  )
+    {
+     for(SectionOccurrence sr : ps.getGlobalSections())
+     {
+      if(config.getGenAcc())
+      {
+       if(sr.getPrefix() != null || sr.getSuffix() != null)
+        sr.getSection().setAccNo((sr.getPrefix() != null ? sr.getPrefix() : "") + (gen++) + (sr.getSuffix() != null ? sr.getSuffix() : ""));
+      }
+      else
+       sr.getSection().setAccNo(sr.getOriginalAccNo().substring(1));
+     }
+    }
+
+    if(ps.getReferenceOccurrences() == null)
+     continue;
+
+    if(config.getGenAcc() && ps.getReferenceOccurrences() != null )
+    {
+     for(ReferenceOccurrence ro : ps.getReferenceOccurrences())
+      ro.getRef().setValue(ro.getSection().getAccNo());
+    }
+
+    /*
+     * boolean hasTitle = false; for( SectionAttribute satt :
+     * ps.getRootSectionOccurance().getSection().getAttributes() ) {
+     * if(satt.getName().equals("Title")) { hasTitle = true; break; } }
+     * 
+     * if( ! hasTitle ) { for( SubmissionAttribute sbAtt :
+     * ps.getSubmission().getAttributes() ) {
+     * if(sbAtt.getName().equals("Title")) {
+     * ps.getRootSectionOccurance().getSection().getAttributes().add(0, new
+     * SectionAttribute("Title", sbAtt.getValue())); break; } }
+     * 
+     * }
+     */
    }
-   
-*/
   }
   
   PrintStream out =null;
