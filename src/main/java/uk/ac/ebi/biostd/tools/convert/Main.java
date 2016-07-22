@@ -13,8 +13,6 @@ import uk.ac.ebi.biostd.in.pagetab.SubmissionInfo;
 import uk.ac.ebi.biostd.model.SubmissionAttributeException;
 import uk.ac.ebi.biostd.out.DocumentFormatter;
 import uk.ac.ebi.biostd.out.cell.CellFormatter;
-import uk.ac.ebi.biostd.out.cell.XLSXCellStream;
-import uk.ac.ebi.biostd.out.cell.XSVCellStream;
 import uk.ac.ebi.biostd.out.json.JSONFormatter;
 import uk.ac.ebi.biostd.out.pageml.PageMLFormatter;
 import uk.ac.ebi.biostd.treelog.ErrorCounter;
@@ -23,6 +21,8 @@ import uk.ac.ebi.biostd.treelog.LogNode.Level;
 import uk.ac.ebi.biostd.treelog.SimpleLogNode;
 import uk.ac.ebi.biostd.treelog.Utils;
 import uk.ac.ebi.biostd.util.DataFormat;
+import uk.ac.ebi.mg.spreadsheet.cell.XLSXCellStream;
+import uk.ac.ebi.mg.spreadsheet.cell.XSVCellStream;
 
 import com.lexicalscope.jewel.cli.ArgumentValidationException;
 import com.lexicalscope.jewel.cli.CliFactory;
@@ -321,7 +321,7 @@ public class Main
   else if( fmt == DataFormat.json )
    outfmt = new JSONFormatter(out);
   else if( fmt == DataFormat.csv )
-   outfmt = new CellFormatter( XSVCellStream.getCSVCellStream(out) );
+   outfmt = new CellFormatter( uk.ac.ebi.mg.spreadsheet.cell.XSVCellStream.getCSVCellStream(out) );
   else if( fmt == DataFormat.tsv )
    outfmt = new CellFormatter( XSVCellStream.getTSVCellStream(out) );
   else if( fmt == DataFormat.xlsx )
@@ -344,7 +344,7 @@ public class Main
  
  static void usage()
  {
-  System.err.println("Usage: java -jar PT2PML [-h] [-i in fmt] [-o out fmt] [-d] [-l logfile] <input file> <output file>");
+  System.err.println("Usage: java -jar PTConvert [-h] [-i in fmt] [-o out fmt] [-d] [-l logfile] <input file> <output file>");
   System.err.println("-h or --help print this help message");
   System.err.println("-i or --inputFormat input file format. Can be json, xls, xlsx, ods, tsv, csv or auto (by file extension). Default is auto");
   System.err.println("-o or --outputFormat output file format. Can be json, xml, csv, tsv, xlsx. Default is xml");

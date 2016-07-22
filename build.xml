@@ -20,13 +20,10 @@
 		<property name="manifest" location="MANIFEST.MF"/>
 		<property name="jarname" value="PTConvert.jar"/>
 		
-		<maven:dependencies filesetId="deps">
-		  	<maven:dependency groupId="com.lexicalscope.jewelcli" artifactId="jewelcli" version="[0.8.9,)" />
-		  	<maven:dependency groupId="org.json" artifactId="json" version="20141113" />
-		  	<maven:dependency groupId="uk.ac.ebi.biostd" artifactId="BioStdCoreModel" version="[0,)" />
-		</maven:dependencies>
-
-
+		<maven:pom id="projpom" file="pom.xml" />
+				
+		<maven:dependencies filesetId="deps" pomRefId="projpom" />
+		
 		<path id="master-classpath">
 			<fileset refid="deps"></fileset>
 	    </path>
