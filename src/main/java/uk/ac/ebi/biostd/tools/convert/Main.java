@@ -317,7 +317,7 @@ public class Main
   DocumentFormatter outfmt = null;
   
   if( fmt == DataFormat.xml )
-   outfmt = new PageMLFormatter(out);
+   outfmt = new PageMLFormatter(out,false);
   else if( fmt == DataFormat.json )
    outfmt = new JSONFormatter(out);
   else if( fmt == DataFormat.csv )
