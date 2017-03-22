@@ -319,7 +319,7 @@ public class Main
   if( fmt == DataFormat.xml )
    outfmt = new PageMLFormatter(out,false);
   else if( fmt == DataFormat.json )
-   outfmt = new JSONFormatter(out);
+   outfmt = new JSONFormatter(out,false);
   else if( fmt == DataFormat.csv )
    outfmt = new CellFormatter( uk.ac.ebi.mg.spreadsheet.cell.XSVCellStream.getCSVCellStream(out) );
   else if( fmt == DataFormat.tsv )

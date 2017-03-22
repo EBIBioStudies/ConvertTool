@@ -4,6 +4,7 @@ import java.io.File;
 
 import org.odftoolkit.simple.SpreadsheetDocument;
 
+import uk.ac.ebi.biostd.db.AdHocTagResolver;
 import uk.ac.ebi.biostd.db.TagResolver;
 import uk.ac.ebi.biostd.in.PMDoc;
 import uk.ac.ebi.biostd.in.ParserConfig;

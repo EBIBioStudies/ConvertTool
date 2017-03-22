@@ -5,6 +5,7 @@ import java.io.File;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
+import uk.ac.ebi.biostd.db.AdHocTagResolver;
 import uk.ac.ebi.biostd.db.TagResolver;
 import uk.ac.ebi.biostd.in.PMDoc;
 import uk.ac.ebi.biostd.in.ParserConfig;
